@@ -50,7 +50,7 @@ end
 
 # [3.1] Now that we have set a breakpoint, run the program in a way that will reveal the first character of the password.
 
-run flag{H4shItN3xtT1me}
+run AAAAAAAAAAAAAAAAAAA
 
 echo \n
 
