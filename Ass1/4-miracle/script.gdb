@@ -51,7 +51,7 @@ ni 23
 
 # Now that $rip is somewhere in the authenticate() function, somewhere
 # before the condition, we can try to run assembly instructions by hand until we land on the
-# desired assembly instruction. 
+# desired assembly instruction.
 
 # [1.2]: Now it's time to apply the exploit. What is the memory location of the current instruction?
 # What is the memory location of the integer that we want to modify? What do we want to replace the 
@@ -81,8 +81,7 @@ continue
 # the second <TODO> with at most command. Said command must not be similar to the previous method, so any
 # instruction of type `continue <magic>` or `s <magic>` is forbidden. In principle, method 2 must work
 # regardless of where the comparison is.
-break *0x401060 if *(unsigned long*)$rsp == 0x46b91f
-
+break *0x401060 if *((char*)$rdi+6) == 'f' && *((char*)$rdi+7) == 'a' && *((char*)$rdi+8) == 'i' && *((char*)$rdi+9) == 'l'
 # Run the program and adjust so that you can look around authentication. You may replace the second
 # <TODO> with at most one command. Similarly to the previous step, the second <TODO> must not use 
 # some magic constant.
@@ -90,15 +89,16 @@ run test test
 finish
 
 # [2.2]: Now it's time to apply the exploit again.
-set $instruction_location = $rip
-set $exploited_int_location = $rip + 0xd717 + 6
+set $instruction_location = $rip - 0x3D
+set $exploited_int_location = $rip + 0xd717 + 6 - 0x3D
 set $condition_int = 0x1020304
+c
 
 # It may be that after the `break` from this method, you're after the comparison, so you may want to
 # restart the program. We will add a break to the main function, so that we can apply the exploit before
 # going through the authentication procedure.
+break * $instruction_location
 run test test
-
 # Apply the exploit.
 set *(int*)($exploited_int_location) = $condition_int
 continue

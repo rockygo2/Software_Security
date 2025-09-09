@@ -45,6 +45,7 @@ set $program_counter_init = 0x100
 #   `set cpu.memory[0x1234] = 0x56`
 
 # target = 0x000000000040119c
+# target = 0x00000000004011a1
 # cpu.memory = 0x7ffffffddd30
 # current sp =  0x7fffffffdd80
 
@@ -95,9 +96,7 @@ set cpu.memory[$program_counter_init + 19] = 0xC5
 set cpu.memory[$program_counter_init + 20] = 0xfd
 set cpu.memory[$program_counter_init + 21] = 0x00
 continue
-c
-i frame
-x/100gx 0x7ffffffddd2c-0x10
+
 # [1.3] If you did this correctly, the program will jump to the unreachable function, and will print out the flag.
 # What is the flag? Put your answer in double quotes (") like a string.
 set $flag = flag{ItD03sntRunD00m}
