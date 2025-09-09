@@ -38,29 +38,28 @@ set logging enabled on
 
 # [1.1]: You might have noticed that the program is very repetitive. Find a suitable 
 # breakpoint that will help you with exploring the program.
-break <TODO>
+break *0x401060
 
 # Now, try to run the program so that we get to the interesting part, that is, the authentication
 # condition. This is the big step where you have to skip through all the garbage. Find the number of
 # breakpoint triggers to skip so that you land right before the authentication condition.
 # Adjust yourself in such a way that you're actually in the authentication function, and not in 
 # another function. You may replace the last TODO with only one command.
-run <TODO>
-continue <TODO>
-<TODO>
+run test test
+continue 9083
+ni 23
 
 # Now that $rip is somewhere in the authenticate() function, somewhere
 # before the condition, we can try to run assembly instructions by hand until we land on the
 # desired assembly instruction. 
-<TODO>
 
 # [1.2]: Now it's time to apply the exploit. What is the memory location of the current instruction?
 # What is the memory location of the integer that we want to modify? What do we want to replace the 
 # condition integer with? You may not hardcode the addresses. You may hardcode the condition integer,
 # but you should explain in the `readme.txt` how you got said value.
-set $instruction_location = <TODO>
-set $exploited_int_location = <TODO>
-set $condition_int = <TODO>
+set $instruction_location = $rip
+set $exploited_int_location = $rip + 0xd717 + 6
+set $condition_int = 0x1020304
 
 # Apply the exploit.
 set *(int*)($exploited_int_location) = $condition_int
@@ -72,6 +71,7 @@ set *(int*)($exploited_int_location) = $condition_int
 
 disable 1
 continue
+quit
 
 
 
