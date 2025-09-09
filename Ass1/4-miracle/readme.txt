@@ -14,3 +14,7 @@ i followed this by piping it into awk with
 | awk '/call   0x401050/ { count++ } /cmp/ { print count; exit } '
 
 in order to find how many continue instructions i needed.
+
+
+
+FLAG: flag{3v3ryD4y154M1r4cl3}

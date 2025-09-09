@@ -71,8 +71,6 @@ set *(int*)($exploited_int_location) = $condition_int
 
 disable 1
 continue
-quit
-
 
 
 # [Part 2]
@@ -83,25 +81,23 @@ quit
 # the second <TODO> with at most command. Said command must not be similar to the previous method, so any
 # instruction of type `continue <magic>` or `s <magic>` is forbidden. In principle, method 2 must work
 # regardless of where the comparison is.
-break <TODO>
-<TODO>
+break *0x401060 if *(unsigned long*)$rsp == 0x46b91f
 
 # Run the program and adjust so that you can look around authentication. You may replace the second
 # <TODO> with at most one command. Similarly to the previous step, the second <TODO> must not use 
 # some magic constant.
-run <TODO>
-<TODO>
+run test test
+finish
 
 # [2.2]: Now it's time to apply the exploit again.
-set $instruction_location = <TODO>
-set $exploited_int_location = <TODO>
-set $condition_int = <TODO>
+set $instruction_location = $rip
+set $exploited_int_location = $rip + 0xd717 + 6
+set $condition_int = 0x1020304
 
 # It may be that after the `break` from this method, you're after the comparison, so you may want to
 # restart the program. We will add a break to the main function, so that we can apply the exploit before
 # going through the authentication procedure.
-break main
-run <TODO>
+run test test
 
 # Apply the exploit.
 set *(int*)($exploited_int_location) = $condition_int

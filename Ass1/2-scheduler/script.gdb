@@ -31,26 +31,25 @@ set logging enabled on
 # in which we can put a breakpoint. We can put a breakpoint either in the source code or on the function fgets
 # itself. We may also put a breakpoint on a specific assembly instruction. You might find that one of the methods 
 # is more useful than the other.
-break <TODO>
 
+break *main+192
 # Now we want to skip the reading part and emulate the reading step automatically.
 # To skip the fgets function, one way that you can do this is to change the instruction pointer manually.
 # Find out how many instruction bytes you have to skip to go over the entire fgets call without skipping too much.
 commands
-    set $offset = <TODO>
-    set $rip = <TODO>
+    set $offset = 5
+    set $rip = $rip + $offset
 
     # We want to emulate the reading part, so put into buffer a string that is plausible to have been read
     # by fgets.
-    set main::buffer = <TODO>
+    set main::buffer = "Test"
 
     # Now that we have skipped the fgets and emulated it with gdb, the program is still stopped, so we should 
     # keep it going. You may replace this TODO with only one command.
-    <TODO>
+    continue
 end
-
 # Finally, to check that our breakpoint actually works, let's run the program to see if it goes until the end.
-run <TODO>
+#r
 
 
 
@@ -70,8 +69,8 @@ run <TODO>
 # its value changes (from false, it becomes true), thus the watch point will trigger and stop the execution
 # of the program. Therefore, find such a condition to check if a room is interesting.
 #
-# Hint: For which rooms are robots 2, 3, 4, ..., 9 going to be activated?
-watch <TODO>
+# Hint: For which rooms are robots 2, 3, 4, ..., 9 going to be activated?v
+watch contention > 8
 
 # Now that hopefully everything is set up, it's time to run the program. The plan is that the breakpoint
 # is going to skip through all the irrelevant user inputs and the watchpoint is going to catch the interesting
@@ -81,17 +80,17 @@ watch <TODO>
 # conveniently in the file `payload.txt`, which we will want to pipe to stdin. Then run the program until
 # you encounter the interesting room. Make sure that you did not modify the payload.txt file in any way.
 # If you did, you can always redownload it. You may replace the second TODO with at most two instructions.
-run <TODO>
-<TODO>
+run < payload.txt
 
 # [2.2]: GDB should be somewhere before fgets. Now we want the input from stdin to actually go through, so
 # we do not want to skip this particular call of fgets. We should temporarily disable the breakpoint.
 # Then, after the breakpoint is disabled, we can feed the payload to the program. You may replace 
 # the second TODO with only one instruction.
-disable <TODO>
-<TODO>
-
+disable 1
+c
 # [2.3]: The exploit has been applied. Now we just want to execute the program normally until the very end.
 # To do so, we must adjust all the breakpoints/watchpoints. You may replace this TODO with as many 
 # `enable`/`disable` instructions as you want and at most one other instruction.
-<TODO>
+enable 1
+disable 2 
+c
