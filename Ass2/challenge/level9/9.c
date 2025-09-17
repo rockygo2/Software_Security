@@ -33,6 +33,7 @@ static void validate_magic_number(char *data) {
     errx(EXIT_FAILURE, "Failed to parse magic number");
 }
 
+// BUG: ONLY SKIPS THE FIRST COMMENT 
 static size_t skip_comments(char *data, size_t cursor) {
   while (!isspace(data[cursor]))
     cursor++;
@@ -81,6 +82,7 @@ static struct image parse_image(struct raw_data *raw_data) {
 
   cursor = skip_comments(data, cursor);
 
+  // BUG: integer overflow causes loop to go more then malloc buffer
   image.pixels = mymalloc(image.width * image.height * sizeof(struct pixel));
   if (!image.pixels)
     err(EXIT_FAILURE, "Failed to allocate pixel array");
@@ -102,6 +104,7 @@ static struct image parse_image(struct raw_data *raw_data) {
 }
 
 // Lookup table for Base64 characters
+// BUG: Can do out of bounds array access here for uninitialised data Currently looks like there is no unininitialised data becaause its global not part of stack :(
 static const char lookup_table[256] = {
     ['A'] = 0,  ['B'] = 1,  ['C'] = 2,  ['D'] = 3,  ['E'] = 4,  ['F'] = 5,
     ['G'] = 6,  ['H'] = 7,  ['I'] = 8,  ['J'] = 9,  ['K'] = 10, ['L'] = 11,
@@ -243,6 +246,7 @@ static void add_image(void) {
   size_t line_length = 0;
 
   printf("Name of the image: ");
+  // BUG: Can insert nullbytes here if needed
   if (line_length = getline(&line, &n, stdin), line_length == -1)
     errx(EXIT_FAILURE, "Failed to read line for name");
 
@@ -253,6 +257,7 @@ static void add_image(void) {
 
   printf("Base64 encoded image data: ");
   char *data = NULL;
+  // can insert null bytes here
   size_t data_length = 0;
   while (line_length = getline(&line, &n, stdin), line_length != -1) {
     if (line_length == 1 && line[0] == '\n')
@@ -269,6 +274,7 @@ static void add_image(void) {
   if (!data)
     errx(EXIT_FAILURE, "No data provided");
   assert(data_length > 0);
+  // BUG: Overwriting one null byte if no \n is in the input pretty useless :(
   data[data_length] = 0;
 
   struct raw_data raw_data = base64_decode(strlen(data), data);
@@ -284,6 +290,7 @@ static void add_image(void) {
 static void remove_image(void) {
   printf("Index: ");
   int c = getchar();
+  //BUG: 1 Too many entries here reads into free_first
   if (c < '0' || c > '8')
     errx(EXIT_FAILURE, "Index out of bounds");
   int index = c - 0x30;
