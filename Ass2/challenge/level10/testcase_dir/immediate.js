@@ -1,0 +1,21 @@
+/* immediates */
+alert(0);
+alert(1);
+alert(10);
+alert(127);
+alert(32767);
+alert(2147483647);
+alert(9223372036854775807);
+alert(0x10);
+alert(0x7fff);
+alert(0x7FFF);
+alert(0x7fffffff);
+alert(0x7fffffffffffffff);
+alert(010);
+alert(077777);
+alert(017777777777);
+alert(0777777777777777777777);
+alert(0b10);
+alert(0b111111111111111);
+alert(0b1111111111111111111111111111111);
+alert(0b111111111111111111111111111111111111111111111111111111111111111);

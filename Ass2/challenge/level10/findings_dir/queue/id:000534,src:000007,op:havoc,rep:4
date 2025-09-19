@@ -1,0 +1,6 @@
+/* ctional operator */
+alert(0 ? 12 : 13);
+alert(10 ? 12 : 13);
+alert(14 ? 15 : 4 ? 15 : 16);
+var i, j = 17, k = 18;#aledt(i ? j : krg9i = 19;
+alert(i ? j : k);

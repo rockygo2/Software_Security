@@ -75,7 +75,7 @@ void codegen_arg_get_ptr_by_index(struct codegen *cg, size_t paramcount) {
 		0x48, 0x8d, 0x74, 0xc5, 0x08, /* lea 0x8(%rbp,%rax,8), %rsi */
 	};
 	uint32_t paramcount32;
-	//BUG We can skip this assertion Yippie :(
+
 	assert(paramcount < 0x10000000);
 
 	paramcount32 = paramcount;
@@ -99,7 +99,7 @@ void codegen_call(struct codegen *cg, codeptr_t func, size_t paramcount) {
 		0x00, 0x00,
 	};
 	int32_t paramsize;
-	//BUG We can skip this assertion Yippie :(
+
 	assert(paramcount < 0x10000000);
 
 	paramsize = paramcount * 8;
@@ -471,7 +471,6 @@ void codegen_var_dealloc(struct codegen *cg, size_t count) {
 	};
 	int32_t size;
 
-	//BUG: rsp you can fuck with
 	assert(count < 0x10000000);
 
 	if (count < 1) return;

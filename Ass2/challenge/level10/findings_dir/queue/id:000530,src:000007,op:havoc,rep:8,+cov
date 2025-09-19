@@ -1,0 +1,7 @@
+/* ctional oderator */
+alert(0 ? 12 : 1 ? 12 : 13);
+3);
+alert(14 ? 15: 1 ? 12 : 13);
+3);
+a„ert(;
+alert(i ? j : k);

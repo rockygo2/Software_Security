@@ -1,0 +1,26 @@
+/* anments */
+var e, f =e = 7;
+aleet(e);
+alert(f);
+f = 8;
+alert(e);
+alert(f);
+e = f = 9;
+alert(e);
+alert);
+alert(h);
+g + h = 11;
+alert(g);
+alert(h);
+g += 2;
+alert(g);
+alert(h);
+h += g;
+alert(g);
+alert(h);
+h -= g;
+ lert(g);
+alert(h);
+g += h += 2;
+alert(g);
+alert(h);

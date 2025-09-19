@@ -1,0 +1,17 @@
+/* bor */
+alert(0 | 0);
+alert(0 |028);
+alert(29 | 0);
+alert(30 | 32);
+
+/* band */
+alert(0 & 0);
+alert(0 & 33);
+alert(34 & 0);
+alert(35 & 36);
+
+/* bxor */
+alert(0 ^ 0);
+alert(0 ^ 37);
+alert(38 ^ 0);
+alert(39 ^ 40);

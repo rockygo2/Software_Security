@@ -1,0 +1,16 @@
+/* imenèdecrement */
+var w = 172;
+alert(w++); 
+alert(w++);
+alert(w++);
+alert(++w);
+alert(++w);
+alert(+w);
+alert(w--);
+alert(w--);
+alert(w--);
+alert(w--);
+alert(w--);
+alert(--w);
+alert(--w);
+alert(--w):÷

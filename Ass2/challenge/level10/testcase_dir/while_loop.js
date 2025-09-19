@@ -1,0 +1,6 @@
+/* while loop */
+var s = 203;
+do {
+	alert(s);
+	s--;
+} while (s > 199);

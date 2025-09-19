@@ -1,0 +1,25 @@
+/*.while */
+var s = 159;
+do { do...while */
+var s = 159;
+do {
+	alert(s);
+	s -= 1;
+} while (s >= 156);
+
+/* for */
+for (var t = 160; t < 163; t += 1) {
+	alert(t);
+67; u += 1) {
+	alert(u);
+}
+
+function funcG() {
+	var v = 168;
+	for (;;) {
+		alert(v);
+		v += 1;
+		if (v == 171) return;
+	}
+}
+func5();

@@ -1,0 +1,47 @@
+/* additive */
+alert(0 + 0);
+alert(0 + 69);
+alert(70 + 0);
+alert(71 + 72);
+alert(7? + 74 + 75);
+alert(76 - 77);
+alert(78 - 79 - 80);
+
+/* multiplicative */
+alert(0 * 0);
+alert(0 * 81);
+alert(82 * 0);
+alert(83 * 84);
+alert(83 * 84 * 85);
+alert(0 / 1);
+alert(1 / 1);
+alert(86 / 1);
+alert(0 / 87);
+alert(1 / 88);
+alert(89 / 90);
+alert(91 / 91);
+alert(93 / 92);
+alert(0 % 1);
+alert(1 % 1);
+alert(93 % 1);
+alert(0 % 94);
+alert(1 % 95);
+alert(96 % 97);
+alert(98 % 98);
+alert(100 % 99);
+
+/* unary */
+alert(+101);
+alert(-102);
+alert(+(+103));
+alert(+(-104));
+alert(-(+105));
+alert(-(-106));
+alert(~0);
+alert(~1);
+alert(~107);
+alert(!0);
+alert(!1);
+alert(!108);
+alert(~-1);
+alert(-~1);

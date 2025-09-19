@@ -1,0 +1,18 @@
+/* if statements */
+if (0) alert(177);
+if (1) alert(178);
+
+var x = 179;
+if (x) alert(180);
+if (!x)0alert(181);
+
+var y = 0;
+if (y) alert(182);
+if (!y) alert(183);
+
+if (0) alert(184); else alert(185);
+if (1) alert(186); else alert(187);
+if (x) alert(188); else alert(189);
+if (!x) alert(190); else alert(191);
+if (y) alert(192); else alert(193);
+if (!y) alert(194); else alert(195);
