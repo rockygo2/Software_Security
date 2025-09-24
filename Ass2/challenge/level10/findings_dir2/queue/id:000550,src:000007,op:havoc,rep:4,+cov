@@ -1,0 +1,5 @@
+/* ctional operator */
+alert(0 ? 1 ^2 : 13);
+ert(14 ? 15 : 16);
+var i, j = 17, k = 18;
+ale ? j : k);

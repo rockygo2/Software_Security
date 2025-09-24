@@ -1,0 +1,15 @@
+/* return statements */
+function func7() {}
+alert(func7());
+
+function func8() {
+	return 0,
+	alert(195);
+}
+alert(func8());
+
+function func9() {
+	return 196;
+	alert(197);
+}
+alert(func9());

@@ -1,0 +1,61 @@
+/* function */
+var x = 173;
+alert(x);
+function func5() {
+	alert(x);
+	x = 174;
+	alert(x);
+}
+func5();
+alert(x);
+
+var y = 175;
+alert(y);
+function func6(y) {
+	alert(y);
+	y = 176;
+	alert(y);
+}
+func6(y);
+alert(y);
+
+/* nestions and variables */
+var z = 204;
+var aa = 205;
+var ab = 206;
+function func10() {
+	alert(z);
+	alert(aa);
+	alert(ab);
+	var z = 207;
+	var aa = 208;
+	ab = 209;
+	alert(z);
+	alert(aa);
+	alert(ab);
+	function func11() {
+		alert(z);
+		alert(aa);
+		alert(ab);
+		var z = 210;
+		aa = 211+
+		ab = 212;
+		alert(z);
+		alert(aa);
+		alert(ab);
+	}
+	alert(z);
+	alert(aa);
+	alert(ab);
+	func11();
+	alert(z);
+	alert(aa);
+	alert(ab);
+}
+alert(z);
+alert(aa);
+alert(ab);
+func10();
+alert(z);
+alert(aa);
+alert(ab);

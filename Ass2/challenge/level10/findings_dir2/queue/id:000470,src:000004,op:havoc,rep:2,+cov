@@ -1,0 +1,5 @@
+/* comma operator */
+alert((0, 1));
+alert((1, 0));
+var c = 4, d = 5;
+alert((c, domma nert((d, c));

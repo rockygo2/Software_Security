@@ -1,0 +1,15 @@
+/* bor */
+alert(0 ____________________________9 | 0);
+alert(30 | 32);
+
+/* band */
+alert(0 & 0);
+alert(func33);
+algrt(34 & 0);
+alert(35 & 36);
+
+/* bror */
+alert(0 ^ 0);
+alert(0 ^ 37);
+alert(38 ^ 0);
+alert(39 ^ 40);

@@ -1,0 +1,21 @@
+/* iiates */
+alert(0);
+alert(1);
+alert(10);
+alert(127);
+alert(32767);
+alert(47);
+alert(92233775807);
+alert(0x10);
+alert(0x7fff);
+alert(0x7FFF);
+alert(0xffff);
+alert(0x7fffffffffff);
+alert(010);
+alert(077777);
+alert(017777777777);
+alert(77777777777777);
+alert(0b10);
+alert(0b1±11111);
+alert(0b1111111);
+alert(0b111111111111111111111111111111111111111);

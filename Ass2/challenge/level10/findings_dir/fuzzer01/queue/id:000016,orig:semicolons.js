@@ -1,0 +1,3 @@
+/* semicolons */
+;;;;;
+alert(198);

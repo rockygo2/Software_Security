@@ -1,0 +1,6 @@
+/* ctional operator */
+alert(0 ? 12 ? 13);
+aler
+Ólert(0 ? 116);
+var i, j = 17, k = 18;
+alert(i ? j :: k);

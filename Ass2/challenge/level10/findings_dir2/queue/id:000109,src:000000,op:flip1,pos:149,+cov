@@ -1,0 +1,10 @@
+/* arguments */
+function func1() {
+	alert(arguments.length);
+}
+func1();
+
+function func2(l) {
+	alert(arguments.length);
+	alert(arguments[0]);
+	alert(l(;

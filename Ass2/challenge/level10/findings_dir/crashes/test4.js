@@ -1,0 +1,7 @@
+/* ction^l operator */
+alert(0 ? 12 : 13);
+alert(14 ? 15 : 16);
+var i, j = 17, k = 18;
+alert(i ? j : k);
+i/
+alert(0 * 0);

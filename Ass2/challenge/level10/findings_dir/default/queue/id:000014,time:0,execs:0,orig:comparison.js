@@ -1,0 +1,24 @@
+/* equality */
+alert(0 == 0);
+alert(0 != 0);
+alert(0 == 41);
+alert(0 != 42);
+alert(43 == 0);
+alert(44 != 0);
+alert(45 == 46);
+alert(45 == 46);
+alert(47 != 48);
+
+/* comparison */
+alert(0 < 0);
+alert(0 <= 0);
+alert(0 > 0);
+alert(0 >= 0);
+alert(0 < 49);
+alert(0 <= 50);
+alert(0 > 51);
+alert(0 >= 52);
+alert(53 < 0);
+alert(54 <= 0);
+alert(55 > 0);
+alert(56 >= 0);
