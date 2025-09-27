@@ -1,0 +1,1 @@
+I did this with a symbolic link so that  /var/challenge/level1/.secret and ~/.secret are pointing to the same file

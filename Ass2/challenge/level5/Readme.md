@@ -1,0 +1,4 @@
+The vunerable line of code is '''printf(auth->passwordplain);''' pointing to a format string bug.
+
+We firstly use the same shellcode from level4. to find the offset of the format string bug we use '''format_string = FmtStr(execute_fmt=send_payload)''' as it is more efficient which returns 29. We attempted to use the automatic pwntools frmtstring payload but it did not work. Instead we decided to do it byte by byte using a loop
+We choose %31 as it is the location of our address from the offset. We also need to do aaaaab in order to push our address into the correct location. We write with %c and move byte by byte with ```p64(stack_addr + i)```
