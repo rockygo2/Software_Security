@@ -1,3 +1,0 @@
-the bug is that there is an out of bounds decrement in the code.
-
-we use this to remove the null byte such that when ```execl("/bin/sh", "/bin/sh", "-cp", cmd, (char *) NULL);}``` is called cmd is overead into item. for this we make item equal to 33t.

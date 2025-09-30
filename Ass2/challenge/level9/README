@@ -1,0 +1,13 @@
+we find the most important bug is 
+```
+image.pixels = mymalloc(image.width * image.height * sizeof(struct pixel));
+```
+where we see that there is a possible unsigned calculation that will then be treated as signed by mymalloc.
+mymalloc works by rounding any number to the nearest 8th so if it encounters 0xfffff it will naturally round this to 0.
+after naturally rounding to 0 it returns us an malloc of size 0 this allows us to then overwrite into whatevr the next memory region on the heap here is.
+We use this to overwrite the free list with a pointer just below the target return address. When malloc runs through the free list it will set the return adddress on the stack to the current final free block. Instead of just returning to the shellcode normally which we would have to make fake malloc entries so that malloc will not crash the next 2 times it is called. Instead we just "overwrite" the last free block with our shellcode which is space "A"*0x158 away from where our next allocation of malloc(0) and jump to there.
+
+shellcodeTemp is not really used i just needed a large name and this happened to conveniently already be in my code so it is used as the name and has no real affects.
+
+
+run with python3 solve.py SSH

@@ -1,0 +1,13 @@
+Firstly same shellcode. We then call a spice object with set calories which causes is a type vulnerability. 
+We find that by doing this we can trigger an arbitrary read or write.
+the arbitrary read is here 
+```
+std::cout << "- Spice: " << this->spice->GetName() << " ("
+            << this->spice->GetSpecialEffect() << ")" << std::endl;
+```
+The arbitrary overwrite does allow us
+
+since we are dumb we did not use NO ASLR correctly we instead decided to brute force the stack by printing every 8 bytes and checking for a string that is a known offset away from the return pointer(AAAAAA). We previously insert this string ourselves onto the stack we do this by invoking the std::string quick allocation mechanism so the string is saved on the stack instead of just a pointer. The brute force should only take ((0x007ffffffff000-0x007ffffffde000)/8) = 16896 requests so it was completly reasonable to execute. after finding the address of the return pointer with horrible overengineering we overwrite it with the shellcode.
+
+
+

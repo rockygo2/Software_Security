@@ -1,3 +1,0 @@
-The bug is that you can do out of bounds memory accesses on the arguments variable in functions.
-We start by putting everything in an if statement so it executes at once then we  calculate the base offset using the ret leak.
-The way we construct our payload is that first we jump to ```0x54545454``` then we jump to ```0xf050f5f58```. This works as after execution the program continues normally. we use a variable inside the function in order to switch execution paths between jumps we also do ```arguments[-8] += 0x2f``` as it i wanted to remove the null bytes and was getting errors otherwise. 

