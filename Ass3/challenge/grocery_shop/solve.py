@@ -6,15 +6,19 @@ exe = ELF("./grocery_shop")
 
 context.binary = exe
 
+var = """
+b *0x4027b9
+b ShowCatalogue(Catalogue&)
+b *0x000403be5
+"""
 
 def conn():
     if args.LOCAL:
         r = process([exe.path])
         if args.DEB:
             gdb.attach(r, gdbscript="""
-                       b *0x4027b9
-                       b ShowCatalogue(Catalogue&)
-                       b *000403be5
+                       b main
+                       c
                        """)
     else:
         r = remote("addr", 1337)
