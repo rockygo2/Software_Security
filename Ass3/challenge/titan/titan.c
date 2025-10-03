@@ -38,6 +38,7 @@ void update_config(char *pilot_name) {
     printf("\\-[2] - upper boundry\n");
     printf("[%s](0-2): ", pilot_name);
     scanf(" %i", &choice);
+    //BUG can go anywhere here
     if (choice != 0) {
         short target_values[2];
         choice--;

