@@ -82,7 +82,7 @@ public:
   const auto end() const { return items.end(); }
 };
 
-class CartEntry {
+class x {
   std::shared_ptr<const Item> item;
   uint64_t count;
   std::string notes;

